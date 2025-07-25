@@ -1,7 +1,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { nanoid } from "nanoid";
-import { Transform } from "./src/transform.js";
 
+import { Transform } from "./src/transform.js";
 import { mergeAttrs, attrsToHtml, faIconToHtml } from "./src/icon-to-html.js";
 
 export default function(eleventyConfig, pluginOptions = {}) {
@@ -54,8 +54,21 @@ export default function(eleventyConfig, pluginOptions = {}) {
 
 			svgBundle.addToPage(this.page.url, iconHtml);
 
-			let attrStr = attrsToHtml(mergeAttrs(Object.assign({}, options.defaultAttributes), attrs));
-			return `<svg${attrStr ? ` ${attrStr}` : ""}><use href="#${ref}" xlink:href="#${ref}"></use></svg>`;
+			let mergedAttributes = mergeAttrs(Object.assign({}, options.defaultAttributes), attrs);
+			let contentStr = "";
+			if(typeof options.generateId === "function" && attrs?.alt) {
+				// See https://docs.fontawesome.com/web/dig-deeper/accessibility#making-icons-accessible-manually
+				let id = options.generateId();
+				mergedAttributes["aria-labelledby"] = id;
+				mergedAttributes.role = "img";
+				delete mergedAttributes["aria-hidden"];
+				delete mergedAttributes.alt;
+
+				contentStr = `<title id="${id}">${attrs?.alt}</title>`;
+			}
+
+			let attrStr = attrsToHtml(mergedAttributes);
+			return `<svg${attrStr ? ` ${attrStr}` : ""}><use href="#${ref}" xlink:href="#${ref}"></use>${contentStr}</svg>`;
 		});
 	}
 }
