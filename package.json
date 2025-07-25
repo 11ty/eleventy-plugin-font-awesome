@@ -1,6 +1,6 @@
 {
   "name": "@11ty/font-awesome",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.12",
   "type": "module",
   "main": "plugin.js",
   "description": "Optimized per-page tree-shaken SVG spritesheets for Eleventy.",
@@ -29,7 +29,7 @@
     "start": "npx @11ty/eleventy --input=demo --config=demo/eleventy.config.js --serve"
   },
   "devDependencies": {
-    "@11ty/eleventy": "3.0.1-alpha.4",
+    "@11ty/eleventy": "^3.1.2",
     "ava": "^6.2.0"
   },
   "dependencies": {
